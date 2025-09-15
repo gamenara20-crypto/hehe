@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Selamat Ulang Tahun, Elroy!</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+    :root{--bg:#0a0f24;--card:#141a33;--accent:#ffcb05;--muted:#9aa5c9;--grad1:#5a2d82;--grad2:#2d82a7;--grad3:#ff6f61}
+    html,body{height:100%;margin:0;font-family:'Poppins',sans-serif}
+    body{background:linear-gradient(135deg,var(--grad1),var(--grad2),var(--grad3));background-size:600% 600%;animation:bgShift 20s ease infinite;color:#fff;display:flex;align-items:center;justify-content:center;padding:24px}
+    @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    .wrap{width:100%;max-width:900px;background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);border-radius:20px;padding:30px;box-shadow:0 10px 40px rgba(0,0,0,0.6)}
+    .header{display:flex;gap:16px;align-items:center}
+    .avatar{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,#ffcb05,#ff6f61);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:28px;color:#012;box-shadow:0 6px 20px rgba(0,0,0,0.6)}
+    h1{margin:0;font-size:26px;font-weight:800}
+    p.lead{margin:6px 0 18px;color:var(--muted)}
+    .card{background:rgba(255,255,255,0.07);padding:20px;border-radius:16px;margin-top:14px;box-shadow:inset 0 0 20px rgba(255,255,255,0.05)}
+    .statement{font-size:17px;line-height:1.6;margin-bottom:14px}
+    .choices{display:flex;gap:14px;flex-wrap:wrap}
+    .choice{flex:1;min-width:200px;padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.2);cursor:pointer;text-align:center;user-select:none;background:rgba(255,255,255,0.06);transition:0.3s}
+    .choice:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 12px 30px rgba(0,0,0,0.5);background:rgba(255,255,255,0.1)}
+    .hint{font-size:13px;color:var(--muted);margin-top:10px}
+    .overlay{position:fixed;inset:0;background:rgba(10,15,36,0.8);display:flex;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(6px);}
+    .modal{background:linear-gradient(180deg,#1b2540,#101728);padding:28px;border-radius:16px;width:90%;max-width:540px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.8)}
+    .btn{display:inline-block;margin-top:14px;padding:12px 20px;border-radius:12px;border:none;background:var(--accent);color:#021;cursor:pointer;font-weight:700;font-size:15px;transition:0.3s}
+    .btn:hover{background:#ffe066;transform:scale(1.05)}
+    .surprise{display:flex;flex-direction:column;gap:14px;align-items:center}
+    .gift{width:180px;height:180px;border-radius:20px;background:linear-gradient(135deg,#ffcb05,#ff6f61);display:flex;align-items:center;justify-content:center;font-size:46px;font-weight:800;color:#021;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+    .poem{font-style:italic;color:#fff;max-width:600px;line-height:1.6}
+    footer{margin-top:14px;color:var(--muted);font-size:13px;text-align:center}
+    #confetti{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:90}
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+  <div class="wrap" role="main">
+    <div class="header">
+      <div class="avatar">E</div>
+      <div>
+        <h1>✨ Hai, Selamat Datang ✨</h1>
+        <p class="lead">Ada sesuatu istimewa menunggu—tapi sebelum itu, coba perhatikan baik-baik dua pernyataan berikut.</p>
+      </div>
+    </div>
+
+    <div class="card" id="puzzleCard">
+      <div class="statement" id="statementText">
+        Dalam sebuah sistem tertutup, sebuah katalis yang menurunkan energi aktivasi reaksi kimia akan menyebabkan perubahan energi bebas Gibbs (ΔG) reaksi yang semula 
+        negatif menjadi positif. Pernyataan manakah yang benar?
+      </div>
+      <div class="choices">
+        <div class="choice" data-correct="false">Pernyataan A: Penurunan energi aktivasi oleh katalis mengubah jalur reaksi sehingga ΔG reaksi menjadi positif.</div>
+        <div class="choice" data-correct="true">Pernyataan B: Katalis menurunkan energi aktivasi tetapi tidak mengubah nilai ΔG standar reaksi; tanda ΔG tetap bergantung pada keadaan awal dan akhir sistem.</div>
+      </div>
+      <div class="hint">Pilih salah satu jawaban. Kedua pilihan tampak mirip, jadi pikirkan baik-baik. 😉</div>
+    </div>
+
+    <footer>Jika kamu menemukannya, sebuah kejutan akan terbuka untuk Elroy 💝</footer>
+  </div>
+
+  <div id="wrongOverlay" class="overlay" style="display:none">
+    <div class="modal">
+      <h2>❌ Maaf, Anda salah.</h2>
+      <p class="hint">Cobalagi — ingat, katalis hanya memengaruhi jalur reaksi, bukan energi bebasnya.</p>
+      <button class="btn" onclick="closeWrong()">Coba lagi</button>
+    </div>
+  </div>
+
+  <div id="surpriseOverlay" class="overlay" style="display:none">
+    <div class="modal surprise">
+      <div class="gift">🎁</div>
+      <h2 id="happyTitle">🎉 Selamat Ulang Tahun, Elroy! 🎉</h2>
+      <p class="poem">Hari ini langit pun ikut tersenyum, menyinari langkahmu. Semoga setiap tawa jadi cahaya, setiap doa jadi nyata, dan setiap mimpi menemukan jalannya. 🌟</p>
+      <p style="margin:0">— Dari seseorang yang sangat menghargai caramu bersinar ✨</p>
+      <button class="btn" onclick="closeSurprise()">Tutup</button>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.choice').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const correct = btn.dataset.correct === 'true';
+        if(!correct) showWrong(); else showSurprise();
+      });
+    });
+
+    function showWrong(){
+      document.getElementById('wrongOverlay').style.display = 'flex';
+    }
+    function closeWrong(){ document.getElementById('wrongOverlay').style.display='none'; }
+
+    const confettiCanvas = document.getElementById('confetti');
+    const ctx = confettiCanvas.getContext('2d');
+    let confettis = [];
+    function resize(){confettiCanvas.width = innerWidth; confettiCanvas.height = innerHeight}
+    addEventListener('resize', resize); resize();
+
+    function spawnConfetti(){
+      confettis = [];
+      const colors = [[255,203,5],[255,111,97],[90,45,130],[45,130,167]];
+      for(let i=0;i<140;i++){
+        confettis.push({x:Math.random()*confettiCanvas.width, y:Math.random()*-confettiCanvas.height, w:6+Math.random()*10, h:6+Math.random()*10, vx:(Math.random()-0.5)*2, vy:2+Math.random()*4, rot:Math.random()*360, vr:Math.random()*6, color: colors[Math.floor(Math.random()*colors.length)]});
+      }
+      runConfetti();
+    }
+
+    let raf;
+    function runConfetti(){
+      cancelAnimationFrame(raf);
+      function frame(){
+        ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+        confettis.forEach((c)=>{
+          c.x += c.vx; c.y += c.vy; c.rot += c.vr;
+          ctx.save(); ctx.translate(c.x,c.y); ctx.rotate(c.rot*Math.PI/180);
+          ctx.fillStyle = 'rgba('+c.color.join(',')+',1)';
+          ctx.fillRect(-c.w/2,-c.h/2,c.w,c.h);
+          ctx.restore();
+        });
+        confettis = confettis.filter(c=> c.y < confettiCanvas.height + 40);
+        if(confettis.length>0) raf = requestAnimationFrame(frame);
+      }
+      raf = requestAnimationFrame(frame);
+    }
+
+    function showSurprise(){
+      document.getElementById('surpriseOverlay').style.display='flex';
+      spawnConfetti();
+      const gift = document.querySelector('.gift');
+      gift.animate([{transform:'scale(1)'},{transform:'scale(1.08)'},{transform:'scale(1)'}],{duration:1600,iterations:Infinity});
+    }
+    function closeSurprise(){
+      document.getElementById('surpriseOverlay').style.display='none';
+      cancelAnimationFrame(raf);
+      ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+    }
+
+    window.addEventListener('keydown', (e)=>{
+      if(e.key === '1') document.querySelectorAll('.choice')[0].click();
+      if(e.key === '2') document.querySelectorAll('.choice')[1].click();
+      if(e.key === 'Escape') { closeWrong(); closeSurprise(); }
+    });
+  </script>
+</body>
+</html>
